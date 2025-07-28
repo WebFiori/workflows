@@ -55,10 +55,10 @@ jobs:
 
       - name: Rename coverage report
         run: |
-          mv clover.xml ${{ inputs.php-version }}-coverage.xml
+          mv clover.xml php-${{ inputs.php-version }}-coverage.xml
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage
-          path: coverage-reports/${{ inputs.php-version }}-coverage.xml
+          path: php-${{ inputs.php-version }}-coverage.xml
