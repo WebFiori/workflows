@@ -51,7 +51,7 @@ jobs:
         run: composer install --prefer-source --no-interaction
       
       - name: Execute Tests
-        run: phpunit --configuration=${{ inputs.phpunit-config }}
+        run: phpunit --configuration=${{ inputs.phpunit-config }} --coverage-clover=clover.xml
 
       - name: Rename coverage report
         run: |
