@@ -1,12 +1,16 @@
 name: PHP Tests
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       php-version:
-        description: 'PHP version to test with'
         required: true
+        type: string
+        description: 'PHP version to test with'
+        
       phpunit-config:
+        required: true
+        type: string
         description: 'Path to PHPUnit configuration file'
         default: tests/phpunit.xml
 
