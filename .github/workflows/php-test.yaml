@@ -44,15 +44,20 @@ jobs:
           php-version: ${{ github.event.inputs.php-version }}
           extensions: mysqli, mbstring, sqlsrv
           tools: phpunit:${{ steps.versions.outputs.phpunit }}, composer
+          coverage: xdebug
 
       - name: Install Dependencies
         run: composer install --prefer-source --no-interaction
       
       - name: Execute Tests
-        run: phpunit --configuration=${{ github.event.inputs.php-version }} --coverage-clover=coverage.xml
+        run: phpunit --configuration=${{ github.event.inputs.php-version }}
+
+      - name: Rename coverage report
+        run: |
+          mv clover.xml ${{ inputs.php-version }}-coverage.xml
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage
-          path: coverage-reports/${{ github.event.inputs.php-version }}-coverage.xml
+          path: coverage-reports/${{ inputs.php-version }}-coverage.xml
