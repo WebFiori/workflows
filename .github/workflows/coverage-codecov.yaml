@@ -16,6 +16,7 @@ on:
 
 jobs:
   upload:
+    name: Upload Report to Codecov
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
