@@ -13,8 +13,6 @@ on:
         description: 'Path to PHPUnit configuration file'
         default: tests/phpunit.xml
         
-    outputs:
-          phpunit-version: ${{ jobs.phpunit.outputs.phpunit-version }}
 
 jobs:
   test:
