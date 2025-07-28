@@ -1,0 +1,35 @@
+
+name: Codecov Code Coverage
+
+on:
+  workflow_call:
+    inputs:
+      coverage-file:
+        required: true
+        type: string
+      php-version:
+        required: true
+        type: string
+    secrets:
+      CODECOV_TOKEN:
+        required: true
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: code-coverage
+          path: coverage-reports
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage-reports/${{ inputs.coverage-file }}
+          flags: php-${{ inputs.php-version }}
+          name: php-${{ inputs.php-version }}
+          fail_ci_if_error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
