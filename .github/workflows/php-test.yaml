@@ -28,11 +28,11 @@ jobs:
           PHP_VERSION="${{ inputs.php-version }}"
           
           if [[ "$PHP_VERSION" == "8.4" ]]; then
-            echo "PHPUNIT_VERSION=11" >> $GITHUB_ENV
+            echo "PHPUNIT_VERSION=11.5.27" >> $GITHUB_ENV
           elif [[ "$PHP_VERSION" == "8.3" || "$PHP_VERSION" == "8.2" ]]; then
-            echo "PHPUNIT_VERSION=10" >> $GITHUB_ENV
+            echo "PHPUNIT_VERSION=10.5.48" >> $GITHUB_ENV
           elif [[ "$PHP_VERSION" == "8.1" || "$PHP_VERSION" == "8.0" ]]; then
-            echo "PHPUNIT_VERSION=9" >> $GITHUB_ENV
+            echo "PHPUNIT_VERSION=9.5.20" >> $GITHUB_ENV
           else
             echo "Unsupported PHP version: $PHP_VERSION"
             exit 1
