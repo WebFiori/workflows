@@ -1,0 +1,53 @@
+name: PHP Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      php-version:
+        description: 'PHP version to test with'
+        required: true
+      phpunit-config:
+        description: 'Path to PHPUnit configuration file'
+        default: tests/phpunit.xml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine PHPUnit version
+        id: phpunit
+        run: |
+          PHP_VERSION="${{ github.event.inputs.php-version }}"
+          if [[ "$PHP_VERSION" == "8.4" ]]; then
+            echo "PHPUNIT_VERSION=11" >> $GITHUB_ENV
+          elif [[ "$PHP_VERSION" == "8.3" || "$PHP_VERSION" == "8.2" ]]; then
+            echo "PHPUNIT_VERSION=10" >> $GITHUB_ENV
+          elif [[ "$PHP_VERSION" == "8.1" || "$PHP_VERSION" == "8.0" ]]; then
+            echo "PHPUNIT_VERSION=9" >> $GITHUB_ENV
+          else
+            echo "Unsupported PHP version: $PHP_VERSION"
+            exit 1
+          fi
+
+      - name: Setup PHP ${{ github.event.inputs.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ github.event.inputs.php-version }}
+          extensions: mysqli, mbstring, sqlsrv
+          tools: phpunit:${{ steps.versions.outputs.phpunit }}, composer
+
+      - name: Install Dependencies
+        run: composer install --prefer-source --no-interaction
+      
+      - name: Execute Tests
+        run: phpunit --configuration=${{ github.event.inputs.php-version }} --coverage-clover=coverage.xml
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage
+          path: coverage-reports/${{ github.event.inputs.php-version }}-coverage.xml
