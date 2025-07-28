@@ -12,6 +12,9 @@ on:
         type: string
         description: 'Path to PHPUnit configuration file'
         default: tests/phpunit.xml
+        
+    outputs:
+          phpunit-version: ${{ jobs.phpunit.outputs.phpunit-version }}
 
 jobs:
   test:
@@ -24,15 +27,16 @@ jobs:
 
       - name: Determine PHPUnit version
         id: phpunit
+        
         run: |
           PHP_VERSION="${{ inputs.php-version }}"
           
           if [[ "$PHP_VERSION" == "8.4" ]]; then
-            echo "PHPUNIT_VERSION=11.5.27" >> $GITHUB_ENV
+            echo "PHPUNIT_VERSION=11.5.27" >> $GITHUB_OUTPUT
           elif [[ "$PHP_VERSION" == "8.3" || "$PHP_VERSION" == "8.2" ]]; then
-            echo "PHPUNIT_VERSION=10.5.48" >> $GITHUB_ENV
+            echo "PHPUNIT_VERSION=10.5.48" >> $GITHUB_OUTPUT
           elif [[ "$PHP_VERSION" == "8.1" || "$PHP_VERSION" == "8.0" ]]; then
-            echo "PHPUNIT_VERSION=9.5.20" >> $GITHUB_ENV
+            echo "PHPUNIT_VERSION=9.5.20" >> $GITHUB_OUTPUT
           else
             echo "Unsupported PHP version: $PHP_VERSION"
             exit 1
@@ -43,7 +47,7 @@ jobs:
         with:
           php-version: ${{ github.event.inputs.php-version }}
           extensions: mysqli, mbstring, sqlsrv
-          tools: phpunit:${{ steps.versions.outputs.phpunit }}, composer
+          tools: phpunit:${{ steps.phpunit.outputs.phpunit-version }}, composer
           coverage: xdebug
 
       - name: Install Dependencies
