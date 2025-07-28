@@ -26,6 +26,7 @@ jobs:
         id: phpunit
         run: |
           PHP_VERSION="${{ github.event.inputs.php-version }}"
+          echo "PHP Version: $PHP_VERSION"
           if [[ "$PHP_VERSION" == "8.4" ]]; then
             echo "PHPUNIT_VERSION=11" >> $GITHUB_ENV
           elif [[ "$PHP_VERSION" == "8.3" || "$PHP_VERSION" == "8.2" ]]; then
