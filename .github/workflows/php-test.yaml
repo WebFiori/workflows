@@ -9,7 +9,6 @@ on:
         description: 'PHP version to test with'
         
       phpunit-config:
-        required: true
         type: string
         description: 'Path to PHPUnit configuration file'
         default: tests/phpunit.xml
