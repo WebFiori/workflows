@@ -50,7 +50,7 @@ jobs:
         run: composer install --prefer-source --no-interaction
       
       - name: Execute Tests
-        run: phpunit --configuration=${{ github.event.inputs.php-version }}
+        run: phpunit --configuration=${{ inputs.phpunit-config }}
 
       - name: Rename coverage report
         run: |
