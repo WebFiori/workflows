@@ -15,14 +15,17 @@ on:
         required: true
 
 jobs:
-  release_prod:
+  release:
     name: Prepare / Publish Release - ${{ inputs.branch }}
     runs-on: "ubuntu-latest"
     if: ${{ github.ref == 'refs/heads/' ~ inputs.branch }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/release-please-action@v3
-        with:
+     - name: Checkout Code
+       uses: actions/checkout@v4
+      
+     - name: Release Please
+       uses: google-github-actions/release-please-action@v3
+       with:
           release-type: php
           config-file: ${{ inputs.config }}
           token: ${{ secrets.GITHUB_TOKEN }}
