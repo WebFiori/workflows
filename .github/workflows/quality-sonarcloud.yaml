@@ -16,6 +16,11 @@ jobs:
     name: Sonar Cloud Scan
     runs-on: ubuntu-latest
     steps:
+      - name: Check For Config File
+        run: |
+         ls -la
+         cat sonar-project.properties
+
       - name: SonarCloud Code Scan
         uses: sonarsource/sonarqube-scan-action@v5
         env:
