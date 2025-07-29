@@ -10,9 +10,6 @@ on:
       config:
         type: string
         default: release-please-config.json
-    secrets:
-      CODECOV_TOKEN:
-        required: true
 
 jobs:
   release:
