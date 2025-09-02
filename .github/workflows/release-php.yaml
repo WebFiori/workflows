@@ -1,0 +1,28 @@
+
+name: Prepare / Publish Release
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      config:
+        type: string
+        default: release-please-config.json
+
+jobs:
+  release:
+    name: Prepare / Publish Release - ${{ inputs.branch }}
+    runs-on: "ubuntu-latest"
+    if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
+    steps:
+     - name: Checkout Code
+       uses: actions/checkout@v4
+      
+     - name: Release Please
+       uses: google-github-actions/release-please-action@v3
+       with:
+          release-type: php
+          config-file: ${{ inputs.config }}
+          token: ${{ secrets.GITHUB_TOKEN }}
