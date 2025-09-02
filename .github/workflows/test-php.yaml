@@ -32,7 +32,10 @@ jobs:
   test:
     name: Run PHPUnit Tests
     runs-on: ubuntu-latest
-
+    env:
+      MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
+      MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
+      MS_TENANT_ID: ${{ secrets.MS_TENANT_ID }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -66,10 +69,6 @@ jobs:
       
       - name: Execute Tests
         run: phpunit --configuration=${{ inputs.phpunit-config }} --coverage-clover=clover.xml
-        env:
-          MS_CLIENT_ID: ${{ inputs.ms-client-id }}
-          MS_CLIENT_SECRET: ${{ inputs.ms-client-secret }}
-          MS_TENANT_ID: ${{ inputs.ms-tenant-id }}
 
       - name: Rename coverage report
         run: |
