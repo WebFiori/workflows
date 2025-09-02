@@ -13,6 +13,20 @@ on:
         description: 'Path to PHPUnit configuration file'
         default: tests/phpunit.xml
         
+      ms-client-id:
+        type: string
+        description: 'Microsoft Client ID'
+        required: false
+        
+      ms-client-secret:
+        type: string
+        description: 'Microsoft Client Secret'
+        required: false
+        
+      ms-tenant-id:
+        type: string
+        description: 'Microsoft Tenant ID'
+        required: false        
 
 jobs:
   test:
@@ -52,6 +66,10 @@ jobs:
       
       - name: Execute Tests
         run: phpunit --configuration=${{ inputs.phpunit-config }} --coverage-clover=clover.xml
+        env:
+          MS_CLIENT_ID: ${{ inputs.ms-client-id }}
+          MS_CLIENT_SECRET: ${{ inputs.ms-client-secret }}
+          MS_TENANT_ID: ${{ inputs.ms-tenant-id }}
 
       - name: Rename coverage report
         run: |
