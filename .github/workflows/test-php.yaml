@@ -27,7 +27,11 @@ on:
         type: string
         description: 'Microsoft Tenant ID'
         required: false        
-
+        
+      inherited-secrets:
+        type: string
+        description: 'Comma-separated list of inherited secret names'
+        required: false
 jobs:
   test:
     name: Run PHPUnit Tests
@@ -38,22 +42,13 @@ jobs:
       MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
       MS_TENANT_ID: ${{ secrets.MS_TENANT_ID }}
       MS_RFR_TOKEN: ${{ secrets.MS_RFR_TOKEN }}
+      GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+      GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+      GH_RFR_TOKEN: ${{ secrets.GH_RFR_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Display Secrets
-        run: |
-          secrets=()
-          [ -n "${{ secrets.MS_CLIENT_ID }}" ] && secrets+=("MS_CLIENT_ID")
-          [ -n "${{ secrets.MS_CLIENT_SECRET }}" ] && secrets+=("MS_CLIENT_SECRET")
-          [ -n "${{ secrets.MS_TENANT_ID }}" ] && secrets+=("MS_TENANT_ID")
-          [ -n "${{ secrets.MS_RFR_TOKEN }}" ] && secrets+=("MS_RFR_TOKEN")
-          
-          if [ ${#secrets[@]} -eq 0 ]; then
-            echo "No Secrets"
-          else
-            echo "Provided Secrets: $(printf -- "-%s " "${secrets[@]}")"
-          fi
+      
       - name: Determine PHPUnit version
         id: phpunit
         run: |
