@@ -25,6 +25,8 @@ jobs:
       GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
       GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
       GH_RFR_TOKEN: ${{ secrets.GH_RFR_TOKEN }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
