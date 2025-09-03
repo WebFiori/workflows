@@ -12,26 +12,6 @@ on:
         type: string
         description: 'Path to PHPUnit configuration file'
         default: tests/phpunit.xml
-        
-      ms-client-id:
-        type: string
-        description: 'Microsoft Client ID'
-        required: false
-        
-      ms-client-secret:
-        type: string
-        description: 'Microsoft Client Secret'
-        required: false
-        
-      ms-tenant-id:
-        type: string
-        description: 'Microsoft Tenant ID'
-        required: false        
-        
-      inherited-secrets:
-        type: string
-        description: 'Comma-separated list of inherited secret names'
-        required: false
 jobs:
   test:
     name: Run PHPUnit Tests
