@@ -27,7 +27,7 @@ jobs:
       GH_RFR_TOKEN: ${{ secrets.GH_RFR_TOKEN }}
       GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
       GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      OTHER_SMTP_USERNAME_1: ${{ secrets.OTHER_SMTP_PASSWORD_1 }}
+      OTHER_SMTP_USERNAME_1: ${{ secrets.OTHER_SMTP_USERNAME_1 }}
       OTHER_SMTP_PASSWORD_1: ${{ secrets.OTHER_SMTP_PASSWORD_1 }}
       OUTLOOK_TOKEN: ${{ secrets.OUTLOOK_TOKEN }}
       GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
