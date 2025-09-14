@@ -2,11 +2,6 @@ name: Setup SQL Server
 
 on:
   workflow_call:
-    inputs:
-      database-name:
-        required: true
-        type: string
-        description: 'The name of database to be created.'
 
 jobs:
   create:
