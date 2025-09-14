@@ -1,0 +1,39 @@
+name: Setup MySQL 
+
+on:
+  workflow_call:
+    inputs:
+      root-password:
+        required: true
+        type: string
+        description: 'Root user password of MySQL'
+      database-name:
+        required: true
+        type: string
+        description: 'The name of database to be created.'
+        
+
+jobs:
+  setup:
+    name: Setup MySQL 5.7
+    runs-on: ubuntu-latest
+    
+    steps: 
+             
+      - name: Shutdown Ubuntu MySQL
+        run: sudo service mysql stop
+        
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7'
+          mysql database: ${{ inputs.database-name }}
+          mysql root password: ${{ inputs.root-password }}
+          mysql user: 'root' 
+          mysql password: ${{ inputs.root-password }}
+          
+      - name: Wait for MySQL
+        run: |
+          while ! mysqladmin ping --host=127.0.0.1 --password=${{ inputs.root-password }} --silent; do
+            sleep 1
+          done
