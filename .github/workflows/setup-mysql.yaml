@@ -23,4 +23,11 @@ jobs:
         run: |
           sudo apt update
           sudo apt install mysql-client-core-8.0
+          
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping -h 127.0.0.1 --silent; do
+            echo 'waiting for mysql...'
+            sleep 1
+          done
       
