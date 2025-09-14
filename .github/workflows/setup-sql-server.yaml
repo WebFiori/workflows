@@ -1,0 +1,37 @@
+name: Setup SQL Server
+
+on:
+  workflow_call:
+    inputs:
+      sa-password:
+        required: true
+        type: string
+        description: 'SA user password of MySQL'
+      database-name:
+        required: true
+        type: string
+        description: 'The name of database to be created.'
+
+jobs:
+  create:
+    name: Setup SQL Server 2019
+    runs-on: ubuntu-latest
+    services:
+      sql.data:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          SA_PASSWORD: ${{ inputs.sa-password }}
+          ACCEPT_EULA: Y
+          MSSQL_PID: Express
+        ports:
+          - "1433:1433"
+
+    steps: 
+             
+      - name: Setup MSSQL
+        run: |
+         curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+         curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+         sudo apt update
+         sudo apt install mssql-tools18
+         /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P ${{ inputs.sa-password }} -Q 'create database ${{ inputs.database-name }}' -C
