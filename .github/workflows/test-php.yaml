@@ -31,6 +31,9 @@ jobs:
       OTHER_SMTP_PASSWORD_1: ${{ secrets.OTHER_SMTP_PASSWORD_1 }}
       OUTLOOK_TOKEN: ${{ secrets.OUTLOOK_TOKEN }}
       GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
+      SA_SQL_SERVER_PASSWORD: ${{ secrets.SA_SQL_SERVER_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

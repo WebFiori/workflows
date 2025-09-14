@@ -1,39 +1,26 @@
-name: Setup MySQL 
+name: Setup MySQL
 
 on:
   workflow_call:
-    inputs:
-      root-password:
-        required: true
-        type: string
-        description: 'Root user password of MySQL'
-      database-name:
-        required: true
-        type: string
-        description: 'The name of database to be created.'
-        
+
 
 jobs:
-  setup:
-    name: Setup MySQL 5.7
+  create:
+    name: Setup MySQL 8.0 LTS
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        ports:
+          - "3306:3306"
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     
-    steps: 
-             
-      - name: Shutdown Ubuntu MySQL
-        run: sudo service mysql stop
+    steps:
         
-      - name: Set up MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '5.7'
-          mysql database: ${{ inputs.database-name }}
-          mysql root password: ${{ inputs.root-password }}
-          mysql user: 'root' 
-          mysql password: ${{ inputs.root-password }}
-          
-      - name: Wait for MySQL
+      - name: Setup MySQL Client
         run: |
-          while ! mysqladmin ping --host=127.0.0.1 --password=${{ inputs.root-password }} --silent; do
-            sleep 1
-          done
+          sudo apt update
+          sudo apt install mysql-client-core-8.0
+      
