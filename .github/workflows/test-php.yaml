@@ -62,6 +62,13 @@ jobs:
           tools: phpunit:${{ steps.phpunit.outputs.phpunit-version }}, composer
           coverage: xdebug
 
+      - name: Install ODBC Driver for SQL Server
+        run: |
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo apt update
+          sudo ACCEPT_EULA=Y apt install msodbcsql18 unixodbc-dev
+
       - name: Install Dependencies
         run: composer install --prefer-source --no-interaction
       
