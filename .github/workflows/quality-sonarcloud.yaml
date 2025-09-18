@@ -3,10 +3,6 @@ name: Sonar Cloud Scan
 
 on:
   workflow_call:
-    inputs:
-      coverage-file:
-        required: true
-        type: string
     secrets:
       SONAR_TOKEN:
         required: true
