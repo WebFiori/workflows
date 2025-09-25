@@ -55,10 +55,10 @@ jobs:
             exit 1
           fi
 
-      - name: Setup PHP ${{ github.event.inputs.php-version }}
+      - name: Setup PHP ${{ inputs.php-version }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ github.event.inputs.php-version }}
+          php-version: ${{ inputs.php-version }}
           extensions: mysqli, mbstring, sqlsrv
           tools: phpunit:${{ steps.phpunit.outputs.phpunit-version }}, composer
           coverage: xdebug
