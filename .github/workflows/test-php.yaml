@@ -44,7 +44,9 @@ jobs:
         run: |
           PHP_VERSION="${{ inputs.php-version }}"
           
-          if [[ "$PHP_VERSION" == "8.5" || "$PHP_VERSION" == "8.4" ]]; then
+          if [[ "$PHP_VERSION" == "8.5" ]]; then
+            echo "phpunit-version=12.5.4" >> $GITHUB_OUTPUT
+          elif [[ "$PHP_VERSION" == "8.4" ]]
             echo "phpunit-version=11.5.27" >> $GITHUB_OUTPUT
           elif [[ "$PHP_VERSION" == "8.3" || "$PHP_VERSION" == "8.2" ]]; then
             echo "phpunit-version=10.5.48" >> $GITHUB_OUTPUT
