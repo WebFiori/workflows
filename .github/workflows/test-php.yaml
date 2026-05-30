@@ -12,12 +12,42 @@ on:
         type: string
         description: 'Path to PHPUnit configuration file'
         default: tests/phpunit.xml
+
+      enable-mysql:
+        type: boolean
+        description: 'Enable MySQL service container for tests'
+        default: false
+
+      enable-mssql:
+        type: boolean
+        description: 'Enable MSSQL service container for tests'
+        default: false
+
 jobs:
   test:
     name: Run PHPUnit Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     
+    services:
+      mysql:
+        image: ${{ inputs.enable-mysql && 'mysql:8.0' || '' }}
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: testing_db
+        ports:
+          - "3306:3306"
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      mssql:
+        image: ${{ inputs.enable-mssql && 'mcr.microsoft.com/mssql/server:2022-latest' || '' }}
+        env:
+          SA_PASSWORD: ${{ secrets.SA_SQL_SERVER_PASSWORD }}
+          ACCEPT_EULA: Y
+          MSSQL_PID: developer
+        ports:
+          - "1433:1433"
+
     env:
       MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
       MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
@@ -61,22 +91,48 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.php-version }}
-          extensions: mysqli, mbstring, sqlsrv
+          extensions: mysqli, mbstring, sqlsrv, sqlite3
           tools: phpunit:${{ steps.phpunit.outputs.phpunit-version }}, composer
           coverage: xdebug
 
       - name: Install ODBC Driver for SQL Server
+        if: inputs.enable-mssql
         run: |
           curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
           curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo apt update
           sudo ACCEPT_EULA=Y apt install msodbcsql18 unixodbc-dev
 
+      - name: Wait for MySQL
+        if: inputs.enable-mysql
+        run: |
+          until mysqladmin ping -h 127.0.0.1 --silent; do
+            echo 'Waiting for MySQL...'
+            sleep 2
+          done
+
+      - name: Wait for MSSQL
+        if: inputs.enable-mssql
+        run: |
+          for i in {1..30}; do
+            if /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_SQL_SERVER_PASSWORD" -Q "SELECT 1" -C -N > /dev/null 2>&1; then
+              echo "MSSQL is ready"
+              break
+            fi
+            echo "Waiting for MSSQL... ($i)"
+            sleep 2
+          done
+
+      - name: Create MSSQL test database
+        if: inputs.enable-mssql
+        run: |
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$SA_SQL_SERVER_PASSWORD" -Q "CREATE DATABASE testing_db" -C -N
+
       - name: Install Dependencies
         run: composer install --prefer-source --no-interaction
       
       - name: Execute Tests
-        run: phpunit --configuration=${{ inputs.phpunit-config }} --coverage-clover=clover.xml --stop-on-failure
+        run: phpunit --configuration=${{ inputs.phpunit-config }} --coverage-clover=clover.xml
 
       - name: Rename coverage report
         run: |
