@@ -23,6 +23,11 @@ on:
         description: 'Enable MSSQL service container for tests'
         default: false
 
+      enable-redis:
+        type: boolean
+        description: 'Enable Redis service container and ext-redis for tests'
+        default: false
+
 jobs:
   test:
     name: Run PHPUnit Tests
@@ -47,6 +52,12 @@ jobs:
           MSSQL_PID: developer
         ports:
           - "1433:1433"
+
+      redis:
+        image: ${{ inputs.enable-redis && 'redis:7' || '' }}
+        ports:
+          - "6379:6379"
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     env:
       MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
@@ -87,11 +98,20 @@ jobs:
             exit 1
           fi
 
+      - name: Determine PHP extensions
+        id: extensions
+        run: |
+          EXTENSIONS="mysqli, mbstring, sqlsrv, sqlite3"
+          if [[ "${{ inputs.enable-redis }}" == "true" ]]; then
+            EXTENSIONS="$EXTENSIONS, redis"
+          fi
+          echo "list=$EXTENSIONS" >> $GITHUB_OUTPUT
+
       - name: Setup PHP ${{ inputs.php-version }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.php-version }}
-          extensions: mysqli, mbstring, sqlsrv, sqlite3
+          extensions: ${{ steps.extensions.outputs.list }}
           tools: phpunit:${{ steps.phpunit.outputs.phpunit-version }}, composer
           coverage: xdebug
 
