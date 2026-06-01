@@ -20,7 +20,7 @@ jobs:
     if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     steps:
      - name: Checkout Code
-       uses: actions/checkout@v4
+       uses: actions/checkout@v6
       
      - name: Release Please
        uses: google-github-actions/release-please-action@v4
