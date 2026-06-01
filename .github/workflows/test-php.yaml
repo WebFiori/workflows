@@ -89,10 +89,8 @@ jobs:
             echo "phpunit-version=12.5.4" >> $GITHUB_OUTPUT
           elif [[ "$PHP_VERSION" == "8.4" ]]; then
             echo "phpunit-version=11.5.27" >> $GITHUB_OUTPUT
-          elif [[ "$PHP_VERSION" == "8.3" || "$PHP_VERSION" == "8.2" ]]; then
+          elif [[ "$PHP_VERSION" == "8.3" || "$PHP_VERSION" == "8.2" || "$PHP_VERSION" == "8.1" ]]; then
             echo "phpunit-version=10.5.48" >> $GITHUB_OUTPUT
-          elif [[ "$PHP_VERSION" == "8.1" || "$PHP_VERSION" == "8.0" ]]; then
-            echo "phpunit-version=9.5.20" >> $GITHUB_OUTPUT
           else
             echo "Unsupported PHP version: $PHP_VERSION"
             exit 1
