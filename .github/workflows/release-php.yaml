@@ -15,6 +15,9 @@ jobs:
   release:
     name: Prepare / Publish Release - ${{ inputs.branch }}
     runs-on: "ubuntu-latest"
+    permissions:
+      contents: write
+      pull-requests: write
     if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     steps:
      - name: Checkout Code
