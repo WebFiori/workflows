@@ -18,10 +18,10 @@ jobs:
     if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     steps:
      - name: Checkout Code
-       uses: actions/checkout@v6
+       uses: actions/checkout@v7
       
      - name: Release Please
-       uses: googleapis/release-please-action@v4
+       uses: googleapis/release-please-action@v5
        with:
           release-type: php
           config-file: ${{ inputs.config }}
